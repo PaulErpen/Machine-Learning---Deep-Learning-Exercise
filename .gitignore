@@ -1,2 +1,3 @@
 data
 mnist_reader.py
+__pycache__
