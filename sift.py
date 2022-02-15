@@ -4,12 +4,24 @@ from scipy.cluster.vq import kmeans,vq
 
 k_for_k_means = 200
 
+#images that are aleady grayscale, but haven't been reshaped yet
+#this is the case for the zalando raw data
 def compute_descriptor_list_from_grayscale_arrays(images, dim=28):
+    images = map(lambda image: image.reshape(dim, dim), images)
+    return compute_descriptor_list(images)
+
+#images that are in a proper for but are yet bgr not grayscale
+#this is the case for cifar 10
+def compute_descriptor_list_from_numpy_arrays(images):
+    images = map(lambda image: cv2.cvtColor(image, cv2.COLOR_BGR2GRAY), images)
+    return compute_descriptor_list(images)
+
+#expects grayscale images in form of a numpy array
+def compute_descriptor_list(images):
     sift = cv2.xfeatures2d.SIFT_create()
     descriptor_list = []
     print("Computing descriptors...")
     for (index, image) in enumerate(images):
-        image = image.reshape(dim, dim)
         keypoints, descriptors = sift.detectAndCompute(image, None)
         if descriptors is not None:
             descriptor_list.append(descriptors)
@@ -17,22 +29,6 @@ def compute_descriptor_list_from_grayscale_arrays(images, dim=28):
             descriptor_list.append(np.empty((1, 128), dtype=float))
         if index % 2000 == 0:
             print("Progress {}%".format(int(index / len(images) * 100)))
-    print("Finished computing descriptors!")
-    return descriptor_list
-
-def compute_descriptor_list_from_numpy_arrays(image_array):
-    sift = cv2.xfeatures2d.SIFT_create()
-    descriptor_list = []
-    print("Computing descriptors...")
-    for (index, image) in enumerate(image_array):
-        image = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
-        keypoints, descriptors = sift.detectAndCompute(image, None)
-        if descriptors is not None:
-            descriptor_list.append(descriptors)
-        else:
-            descriptor_list.append(np.empty((1, 128), dtype=float))
-        if index % 2000 == 0:
-            print("Progress {}%".format(int(index / len(image_array) * 100)))
     print("Finished computing descriptors!")
     return descriptor_list
 
