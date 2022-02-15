@@ -4,7 +4,7 @@ from scipy.cluster.vq import kmeans,vq
 
 k_for_k_means = 200
 
-def compute_descriptor_list_from_arrays(images, dim=28):
+def compute_descriptor_list_from_grayscale_arrays(images, dim=28):
     sift = cv2.xfeatures2d.SIFT_create()
     descriptor_list = []
     print("Computing descriptors...")
@@ -20,12 +20,11 @@ def compute_descriptor_list_from_arrays(images, dim=28):
     print("Finished computing descriptors!")
     return descriptor_list
 
-def compute_descriptor_list_from_paths(image_paths):
+def compute_descriptor_list_from_numpy_arrays(image_array):
     sift = cv2.xfeatures2d.SIFT_create()
     descriptor_list = []
     print("Computing descriptors...")
-    for (index, path) in enumerate(image_paths):
-        image = cv2.imread(path)
+    for (index, image) in enumerate(image_array):
         image = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
         keypoints, descriptors = sift.detectAndCompute(image, None)
         if descriptors is not None:
@@ -33,7 +32,7 @@ def compute_descriptor_list_from_paths(image_paths):
         else:
             descriptor_list.append(np.empty((1, 128), dtype=float))
         if index % 2000 == 0:
-            print("Progress {}%".format(int(index / len(image_paths) * 100)))
+            print("Progress {}%".format(int(index / len(image_array) * 100)))
     print("Finished computing descriptors!")
     return descriptor_list
 
