@@ -18,18 +18,21 @@ def compute_descriptor_list_from_numpy_arrays(images):
 
 #expects grayscale images in form of a numpy array
 def compute_descriptor_list(images):
+    n_no_descriptors = 0
     sift = cv2.xfeatures2d.SIFT_create()
     descriptor_list = []
     print("Computing descriptors...")
     for (index, image) in enumerate(images):
         keypoints, descriptors = sift.detectAndCompute(image, None)
-        if descriptors is not None:
+        if descriptors is not None and len(descriptors) != 0:
             descriptor_list.append(descriptors)
         else:
-            descriptor_list.append(np.empty((1, 128), dtype=float))
+            descriptor_list.append([])
+            n_no_descriptors = n_no_descriptors + 1
         if index % 2000 == 0:
             print("Progress {}%".format(int(index / len(images) * 100)))
     print("Finished computing descriptors!")
+    print("{} entries received no descriptors through SIFT algorithm!".format(n_no_descriptors))
     return descriptor_list
 
 def unwrap_descriptor_list(descriptor_list):
