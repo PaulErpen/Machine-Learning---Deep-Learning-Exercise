@@ -7,13 +7,13 @@ k_for_k_means = 200
 #images that are aleady grayscale, but haven't been reshaped yet
 #this is the case for the zalando raw data
 def compute_descriptor_list_from_grayscale_arrays(images, dim=28):
-    images = map(lambda image: image.reshape(dim, dim), images)
+    images = list(map(lambda image: image.reshape(dim, dim), images))
     return compute_descriptor_list(images)
 
 #images that are in a proper for but are yet bgr not grayscale
 #this is the case for cifar 10
 def compute_descriptor_list_from_numpy_arrays(images):
-    images = map(lambda image: cv2.cvtColor(image, cv2.COLOR_BGR2GRAY), images)
+    images = list(map(lambda image: cv2.cvtColor(image, cv2.COLOR_BGR2GRAY), images))
     return compute_descriptor_list(images)
 
 #expects grayscale images in form of a numpy array
