@@ -27,7 +27,7 @@ def compute_descriptor_list(images):
         if descriptors is not None and len(descriptors) != 0:
             descriptor_list.append(descriptors)
         else:
-            descriptor_list.append([])
+            descriptor_list.append(np.empty((1, 128), dtype=float))
             n_no_descriptors = n_no_descriptors + 1
         if index % 2000 == 0:
             print("Progress {}%".format(int(index / len(images) * 100)))
