@@ -13,7 +13,8 @@ def compute_descriptor_list_from_grayscale_arrays(images, dim=28):
 #images that are in a proper for but are yet bgr not grayscale
 #this is the case for cifar 10
 def compute_descriptor_list_from_numpy_arrays(images):
-    images = list(map(lambda image: cv2.cvtColor(image, cv2.COLOR_BGR2GRAY), images))
+    #this is unnecessary and actually contraproductive
+    #images = list(map(lambda image: cv2.cvtColor(image, cv2.COLOR_BGR2GRAY), images))
     return compute_descriptor_list(images)
 
 #expects grayscale images in form of a numpy array
